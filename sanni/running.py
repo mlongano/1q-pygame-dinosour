@@ -67,7 +67,8 @@ player = pygame.sprite.GroupSingle()
 player.add(Player())  # istanza del giocatore aggiunta agli sprite
 
 mobs = pygame.sprite.Group()
-mobs.add(Mob())
+mob_type = choice(["snail", "fly"])
+mobs.add(Mob(mob_type))
 
 # logica dello spawn (23 eventi base, i restanti sono per l'utente)
 spawn_timer = pygame.USEREVENT + 1
@@ -86,7 +87,8 @@ while run:
         if game_active:
             # controllo se è "scaduto" il timer
             if event.type == spawn_timer:
-                mobs.add(Mob())
+                mob_type = choice(["snail", "fly"])
+                mobs.add(Mob(mob_type))
 
         # se sono nel menu, riavvio
         else:
