@@ -31,7 +31,7 @@ class Mob(Sprite):
     def update(self):
         self.rect.x -= 5
         self.animate()
-        self.destroy()
+        self.destroy_onexit()
 
     def animate(self):
         now = pygame.time.get_ticks()
@@ -41,6 +41,6 @@ class Mob(Sprite):
             self.image = self.snail_frames[self.current_frame]
 
     # rimuovere lo sprite quando esce dallo schermo
-    def destroy(self):
+    def destroy_onexit(self):
         if self.rect.right <= 0:
             self.kill()
