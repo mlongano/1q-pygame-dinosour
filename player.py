@@ -7,11 +7,25 @@ class Player(Sprite):  # ereditato
     # costruttore
     def __init__(self):
         super().__init__()
-        walk_1 = pygame.image.load("graphics/player/player_walk_1.png").convert_alpha()
-        walk_2 = pygame.image.load("graphics/player/player_walk_2.png").convert_alpha()
+        self.player_frames = {
+            "walk": [
+                pygame.image.load("graphics/player/player_walk_1.png").convert_alpha(),
+                pygame.image.load("graphics/player/player_walk_2.png").convert_alpha(),
+            ],
+            "jump": [
+                pygame.image.load("graphics/player/jump.png").convert_alpha(),
+                pygame.image.load("graphics/player/player_stand.png").convert_alpha(),
+            ],
+        }
 
-        # sprite del giocatore
-        self.image = walk_1
+        self.current_frames = self.player_frames["walk"]
+        self.current_frame = 0
+        self.last_update = pygame.time.get_ticks()
+        self.frame_rate = 200
+
+        self.grounded = True  # Change this to False when the player is in the air
+
+        self.image = self.current_frames[self.current_frame]
 
         # hitbox
         self.rect = self.image.get_rect(midbottom=(80, 300))
@@ -35,3 +49,16 @@ class Player(Sprite):  # ereditato
     def update(self):
         self.input()
         self.apply_gravity()
+        self.animate()
+
+    def animate(self):
+        now = pygame.time.get_ticks()
+        if now - self.last_update > self.frame_rate:
+            self.last_update = now
+            self.current_frame = (self.current_frame + 1) % len(self.current_frames)
+            self.image = self.current_frames[self.current_frame]
+
+        if self.rect.bottom < 300:
+            self.current_frames = self.player_frames["jump"]
+        else:
+            self.current_frames = self.player_frames["walk"]
