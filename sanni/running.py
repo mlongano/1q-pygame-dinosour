@@ -6,10 +6,6 @@ from mob import Mob
 
 def update_score() -> int:
     current_score = (pygame.time.get_ticks() - start_time) // 100
-    score_text = font.render(f"Punti: {current_score}", False, (64, 64, 64))
-    score_rect = score_text.get_rect(center=(400, 50))
-    screen.blit(score_text, score_rect)
-
     return current_score
 
 
@@ -46,6 +42,7 @@ lives_icon_pos = (100, 10)
 # gestione del punteggio
 score = 0
 start_time = 0
+score_icon_pos = (10, 10)
 
 # carico il font (e specifico la dimensione)
 font = pygame.font.Font("font/Pixeltype.ttf", 50)
@@ -71,6 +68,10 @@ gameover_message_rect = gameover_message.get_rect(center=(400, 80))
 # Importa l'icona per la vita
 heart_icon = pygame.image.load("graphics/heart.png").convert_alpha()
 heart_icon = pygame.transform.scale(heart_icon, (20, 20))
+
+# Importa l'icona per i punti
+coin_icon = pygame.image.load("graphics/coins.png").convert_alpha()
+coin_icon = pygame.transform.scale(coin_icon, (20, 20))
 
 # gestione degli sprite del giocatore
 player = pygame.sprite.GroupSingle()
@@ -114,7 +115,15 @@ while run:
         screen.blit(ground_surface, (0, 300))
 
         # disegna punteggio
-        score = update_score()
+        screen.blit(coin_icon, score_icon_pos)
+
+        # Visualizzazione del numero di punti
+        score_text = font.render(str(update_score()), True, (0, 0, 0))
+        screen.blit(
+            score_text,
+            (score_icon_pos[0] + coin_icon.get_width() + 5, score_icon_pos[1]),
+        )
+
         for i in range(lives):
             screen.blit(
                 heart_icon,
