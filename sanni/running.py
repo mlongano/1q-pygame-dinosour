@@ -24,6 +24,8 @@ def collision_sprite() -> bool:
 
 pygame.init()
 
+MAX_LIVES = 3
+
 w = 800
 h = 400
 
@@ -36,6 +38,10 @@ clock = pygame.time.Clock()
 
 # controlla se sono in gioco o nei menu
 game_active = False
+
+lives = MAX_LIVES  # vite del giocatore
+lives_icon_pos = (100, 10)
+
 
 # gestione del punteggio
 score = 0
@@ -61,6 +67,10 @@ game_message_rect = game_message.get_rect(center=(400, 330))
 
 gameover_message = font.render("GAME OVER", False, (111, 196, 169))
 gameover_message_rect = gameover_message.get_rect(center=(400, 80))
+
+# Importa l'icona per la vita
+heart_icon = pygame.image.load("graphics/heart.png").convert_alpha()
+heart_icon = pygame.transform.scale(heart_icon, (20, 20))
 
 # gestione degli sprite del giocatore
 player = pygame.sprite.GroupSingle()
@@ -94,6 +104,7 @@ while run:
         else:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 game_active = True
+                lives = MAX_LIVES
                 mobs.empty()  # svuoto i nemici
                 start_time = pygame.time.get_ticks()
 
@@ -104,6 +115,11 @@ while run:
 
         # disegna punteggio
         score = update_score()
+        for i in range(lives):
+            screen.blit(
+                heart_icon,
+                (lives_icon_pos[0] + (i * heart_icon.get_width()), lives_icon_pos[1]),
+            )
 
         player.draw(screen)
         player.update()
@@ -111,7 +127,13 @@ while run:
         mobs.draw(screen)
         mobs.update()
 
-        game_active = not collision_sprite()
+        # Invece di terminare subuto il gioco, decremento le vite
+        # Se le vite sono 0, termino il gioco
+        if collision_sprite():
+            lives -= 1
+            mobs.empty()
+            if lives <= 0:
+                game_active = False
 
     # game over
     else:
