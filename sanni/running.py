@@ -118,7 +118,8 @@ while run:
         screen.blit(coin_icon, score_icon_pos)
 
         # Visualizzazione del numero di punti
-        score_text = font.render(str(update_score()), True, (0, 0, 0))
+        score = update_score()
+        score_text = font.render(str(score), True, (0, 0, 0))
         screen.blit(
             score_text,
             (score_icon_pos[0] + coin_icon.get_width() + 5, score_icon_pos[1]),
