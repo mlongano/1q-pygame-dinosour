@@ -37,6 +37,13 @@ class Mob(Sprite):
         self.animate()
         self.destroy()
 
+    def animate(self):
+        now = pygame.time.get_ticks()
+        if now - self.last_update > self.frame_rate:
+            self.last_update = now
+            self.current_frame = (self.current_frame + 1) % len(self.current_frames)
+            self.image = self.current_frames[self.current_frame]
+
     # rimuovere lo sprite quando esce dallo schermo
     def destroy(self):
         if self.rect.right <= 0:

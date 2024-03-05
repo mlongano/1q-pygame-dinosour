@@ -53,7 +53,8 @@ player = pygame.sprite.GroupSingle()
 player.add(Player())  # istanza del giocatore aggiunta agli sprite
 
 mobs = pygame.sprite.Group()
-mobs.add(Mob(score))
+mob_type = choice(["snail", "fly"])
+mobs.add(Mob(mob_type, score))
 
 # logica dello spawn (23 eventi base, i restanti sono per l'utente)
 spawn_timer = pygame.USEREVENT + 1
@@ -71,7 +72,8 @@ while run:
 
         # controllo se è "scaduto" il timer e se il gioco è attivo
         if game_active and event.type == spawn_timer:
-            mobs.add(Mob(score))
+            mob_type = choice(["snail", "fly"])
+            mobs.add(Mob(mob_type, score))
 
     # update del frame
     if game_active:
